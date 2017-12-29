@@ -2,7 +2,8 @@
 const path = require('path');
 const through2 = require('through2');
 const dargs = require('dargs');
-const gutil = require('gulp-util');
+const fancyLog = require('fancy-log');
+const chalk = require('chalk');
 const groupBy = require('lodash.groupby');
 const PQueue = require('p-queue');
 const commandRunner = require('./lib/command-runner');
@@ -85,7 +86,7 @@ module.exports = function (opts = {}, done = noop) {
         return cb();
       }
       if (skipInstall()) {
-        log('Skipping install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
+        log('Skipping install.', 'Run `' + chalk.yellow(formatCommands(toRun)) + '` manually');
         return cb();
       }
       const groupedCommands = groupBy(toRun, 'cmd');
@@ -103,7 +104,7 @@ module.exports = function (opts = {}, done = noop) {
 function logFailure(command) {
   return promise => {
     return promise.catch(err => {
-      log(err.message, ', run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
+      log(err.message, ', run `' + chalk.yellow(formatCommand(command)) + '` manually');
       throw err;
     });
   };
@@ -113,7 +114,7 @@ function log(...args) {
   if (isTest()) {
     return;
   }
-  gutil.log(...args);
+  fancyLog(...args);
 }
 
 function formatCommands(cmds) {
